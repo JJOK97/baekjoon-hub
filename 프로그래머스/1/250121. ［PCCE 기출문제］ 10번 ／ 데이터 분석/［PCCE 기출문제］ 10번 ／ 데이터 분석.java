@@ -1,31 +1,67 @@
-import java.util.*;
-
 class Solution {
-    
-    static Map<String, Integer> map = new HashMap<>() {
-        {
-            put("code", 0);
-            put("date", 1);
-            put("maximum", 2);
-            put("remain", 3);
-        }
-    };
-    
     public int[][] solution(int[][] data, String ext, int val_ext, String sort_by) {
+        int[][] answer;
         
-        List<int[]> dataList = new ArrayList<>();
-        int extIndex = map.get(ext);
+        int check = -1;
         
-        for(int[] datas : data){
-            if(datas[extIndex] < val_ext){
-                dataList.add(datas);
-            }    
-        }   
+        switch(ext){
+            case "code" : check = 0;
+                break;
+            case "date" : check = 1;
+                break;
+            case "maximum" : check = 2;
+                break;
+            case "remain" : check = 3;
+                break;
+        }
         
-        int sortIndex = map.get(sort_by);
+        int sum = 0;
+        for(int i = 0; i < data.length; i++){
         
-        Collections.sort(dataList, (a, b) -> a[sortIndex] - b[sortIndex]);
+            if(data[i][check] < val_ext)
+                sum++;
+            
+        }
         
-        return dataList.toArray(new int[0][]);
+        answer = new int[sum][4];
+        boolean[] b = new boolean[data.length];
+        
+        int check2 = -1;
+        
+        switch(sort_by){
+            case "code" : check2 = 0;
+                break;
+            case "date" : check2 = 1;
+                break;
+            case "maximum" : check2 = 2;
+                break;
+            case "remain" : check2 = 3;
+                break;
+        }
+        
+        for(int i = 0; i < sum; i++){
+        
+            int min = Integer.MAX_VALUE;
+            int index = -1;
+            
+            for(int j = 0; j < data.length; j++){
+                
+                if(data[j][check] < val_ext && min > data[j][check2] && !b[j]){
+                    min = data[j][check2];
+                    index = j;
+                }
+                
+            }
+            
+            b[index] = true;
+            
+            answer[i][0] = data[index][0];
+            answer[i][1] = data[index][1];
+            answer[i][2] = data[index][2];
+            answer[i][3] = data[index][3];
+            
+        }
+        
+        return answer;
     }
 }
